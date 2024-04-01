@@ -1,0 +1,47 @@
+#root {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 2rem;
+    text-align: center;
+}
+
+@font-face {
+    font-family: IBM;
+    src: url("/public/IBMPlexSansArabic-Light.ttf");
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: IBM;
+    src: url("/public/IBMPlexSansArabic-Regular.ttf");
+    font-weight: 500;
+}
+
+@font-face {
+    font-family: IBM;
+    src: url("/public/IBMPlexSansArabic-Medium.ttf");
+    font-weight: 600;
+}
+
+.card {
+    background-color: #3498db;
+    /* A cool blue tone */
+    color: #fff;
+    /* White text for better readability */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 600px;
+    /* Wider card for more content */
+    margin: 20px auto;
+}
+
+@media screen and (min-width: 600px) {
+    .card {
+        max-width: 600px;
+        /* Maintain the set width for smaller screens */
+    }
+}
+
+
+/* https://api.openweathermap.org/data/2.5/weather?lat=35.56200&lon=45.31700&appid=24f7438ece98c2de5a5ce455b4f63b43 */
