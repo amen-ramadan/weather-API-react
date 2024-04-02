@@ -9,157 +9,175 @@ import Typography from "@mui/material/Typography";
 import CloudIcon from "@mui/icons-material/Cloud";
 import Button from "@mui/material/Button";
 
-
 const theme = createTheme({
-	typography: {
-		fontFamily: ["IBM"],
-	},
+  typography: {
+    fontFamily: ["IBM"],
+  },
 });
+
+let cancelAxios = null;
 function App() {
-
-  const [temp, setTemp] = useState(0)
+  console.log("rendering");
+  const [temp, setTemp] = useState({
+    number: null,
+    description: "",
+    min: null, 
+    max: null,
+    icon: "",
+  }); // for the all keys
   useEffect(() => {
-    axios.get("https://api.openweathermap.org/data/2.5/weather?lat=35.56200&lon=45.31700&appid=24f7438ece98c2de5a5ce455b4f63b43").then((response) => {
-      const responseTemp = Math.round(response.data.main.temp - 273.15);
-      setTemp(responseTemp)
-      console.log(temp)
-    })
-  },[])
-	return (
-		<div className="App">
-			<ThemeProvider theme={theme}>
-				<Container maxWidth="sm">
-					{/* CONTENT CONTAINER */}
-					<div
-						style={{
-							height: "100vh",
-							display: "flex",
-							justifyContent: "center",
-							alignItems: "center",
-							flexDirection: "column",
-						}}
-					>
-						{/* CARD */}
-						<div
-							dir="rtl"
-							style={{
-								width: "100%",
-								background: "rgb(28 52 91 / 36%)",
-								color: "white",
-								padding: "20px",
-								borderRadius: "15px",
-								boxShadow: "0px 11px 1px rgba(0,0,0,0.05)",
-							}}
-						>
-							{/* CONTENT */}
-							<div>
-								{/* CITY & TIME */}
-								<div
-									style={{
-										display: "flex",
-										alignItems: "end",
-										justifyContent: "start",
-									}}
-									dir="rtl"
-								>
-									<Typography
-										variant="h2"
-										style={{
-											marginRight: "20px",
-											fontWeight: "600",
-										}}
-									>
-										الرياض
-									</Typography>
+    axios
+      .get(
+        "https://api.openweathermap.org/data/2.5/weather?lat=35.56200&lon=45.31700&appid=24f7438ece98c2de5a5ce455b4f63b43",
+        {
+          cancelToken: new axios.CancelToken((c) => {
+            cancelAxios = c;
+          }),
+        }
+      )
+      .then((response) => {
+        const number = Math.round(response.data.main.temp - 273.15);
+        const min = Math.round(response.data.main.temp_min - 273.15);
+        const max = Math.round(response.data.main.temp_max - 273.15);
+        const description = response.data.weather[0].description;
+        const icon = response.data.weather[0].icon;
+        setTemp({...temp, min: min, max: max, description: description, number: number, icon: icon});
+      })
+      .catch((error) => {
+        console.log(new Error(error));
+      });
 
-									<Typography
-										variant="h5"
-										style={{ marginRight: "20px" }}
-									>
-										الإثنين ١٠-١٠-٢٠٤٠
-									</Typography>
-								</div>
-								{/* == CITY & TIME == */}
+    return () => {      // clean up
+      console.log("clean up")
+      cancelAxios();
+    }
+  }, []);
+  return (
+    <div className="App">
+      <ThemeProvider theme={theme}>
+        <Container maxWidth="sm">
+          {/* CONTENT CONTAINER */}
+          <div
+            style={{
+              height: "100vh",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              flexDirection: "column",
+            }}
+          >
+            {/* CARD */}
+            <div
+              dir="rtl"
+              style={{
+                width: "100%",
+                background: "rgb(28 52 91 / 36%)",
+                color: "white",
+                padding: "20px",
+                borderRadius: "15px",
+                boxShadow: "0px 11px 1px rgba(0,0,0,0.05)",
+              }}
+            >
+              {/* CONTENT */}
+              <div>
+                {/* CITY & TIME */}
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "end",
+                    justifyContent: "start",
+                  }}
+                  dir="rtl"
+                >
+                  <Typography
+                    variant="h2"
+                    style={{
+                      marginRight: "20px",
+                      fontWeight: "600",
+                    }}
+                  >
+                    السليمانية
+                  </Typography>
 
-								<hr />
+                  <Typography variant="h5" style={{ marginRight: "20px" }}>
+                    الإثنين ١٠-١٠-٢٠٤٠
+                  </Typography>
+                </div>
+                {/* == CITY & TIME == */}
 
-								{/* CONTAINER OF DEGREE + CLOUD ICON */}
-								<div
-									style={{
-										display: "flex",
-										justifyContent: "space-around",
-									}}
-								>
-									{/* DEGREE & DESCRIPTION */}
-									<div>
-										{/* TEMP */}
-										<div>
-											<Typography
-												variant="h1"
-												style={{ textAlign: "right" }}
-											>
-												{temp}
-											</Typography>
+                <hr />
 
-											{/* TODO: TEMP IMAGE */}
-										</div>
-										{/*== TEMP ==*/}
+                {/* CONTAINER OF DEGREE + CLOUD ICON */}
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-around",
+                  }}
+                >
+                  {/* DEGREE & DESCRIPTION */}
+                  <div>
+                    {/* TEMP */}
+                    <div>
+                      <Typography variant="h1" style={{ textAlign: "right" }}>
+                        {temp.number}
+                      </Typography>
 
-										<Typography variant="h6">
-											broken clouds
-										</Typography>
+                      {/* <img src={`https://openweathermap.org/img/wn/${temp.icon}@4x.png`} alt="icon-weather" /> */}
+                    </div>
+                    {/*== TEMP ==*/}
 
-										{/* MIN & MAX */}
-										<div
-											style={{
-												display: "flex",
-												justifyContent: "space-between",
-												alignItems: "center",
-											}}
-										>
-											<h5>الصغرى: 34</h5>
-											<h5 style={{ margin: "0px 5px" }}>
-												|
-											</h5>
-											<h5>الكبرى: 34</h5>
-										</div>
-									</div>
-									{/*== DEGREE & DESCRIPTION ==*/}
+                    <Typography variant="h6">{temp.description}</Typography>
 
-									<CloudIcon
-										style={{
-											fontSize: "200px",
-											color: "white",
-										}}
-									/>
-								</div>
-								{/*= CONTAINER OF DEGREE + CLOUD ICON ==*/}
-							</div>
-							{/* == CONTENT == */}
-						</div>
-						{/*== CARD ==*/}
+                    {/* MIN & MAX */}
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                      }}
+                    >
+                      <h5>الصغرى: {temp.min}</h5>
+                      <h5 style={{ margin: "0px 5px" }}>|</h5>
+                      <h5>الكبرى: {temp.max}</h5>
+                    </div>
+                  </div>
+                  {/*== DEGREE & DESCRIPTION ==*/}
 
-						{/* TRANSLATION CONTAINER */}
-						<div
-							dir="rtl"
-							style={{
-								width: "100%",
-								display: "flex",
-								justifyContent: "end",
-								marginTop: "20px",
-							}}
-						>
-							<Button style={{ color: "white" }} variant="text">
-								إنجليزي
-							</Button>
-						</div>
-						{/*== TRANSLATION CONTAINER ==*/}
-					</div>
-					{/*== CONTENT CONTAINER ==*/}
-				</Container>
-			</ThemeProvider>
-		</div>
-	);
+                  <img src={`https://openweathermap.org/img/wn/${temp.icon}@4x.png`} alt="icon-weather" />
+                  {/* <CloudIcon
+                    style={{
+                      fontSize: "200px",
+                      color: "white",
+                    }}
+                  /> */}
+                </div>
+                {/*= CONTAINER OF DEGREE + CLOUD ICON ==*/}
+              </div>
+              {/* == CONTENT == */}
+            </div>
+            {/*== CARD ==*/}
+
+            {/* TRANSLATION CONTAINER */}
+            <div
+              dir="rtl"
+              style={{
+                width: "100%",
+                display: "flex",
+                justifyContent: "end",
+                marginTop: "20px",
+              }}
+            >
+              <Button style={{ color: "white" }} variant="text">
+                إنجليزي
+              </Button>
+            </div>
+            {/*== TRANSLATION CONTAINER ==*/}
+          </div>
+          {/*== CONTENT CONTAINER ==*/}
+        </Container>
+      </ThemeProvider>
+    </div>
+  );
 }
 
 export default App;
