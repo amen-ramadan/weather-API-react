@@ -2,11 +2,15 @@ import "./App.css";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import moment from "moment";
+// حتى يتم تفعيل اللغة العربية عليك استيراد ملفات ال local 
+import 'moment/min/locales.js';
+moment.locale("ar"); // تعيين اللغة العربية لـ moment.js
+
 
 // MATERIAL UI COMPONENTS
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
-import CloudIcon from "@mui/icons-material/Cloud";
 import Button from "@mui/material/Button";
 
 const theme = createTheme({
@@ -18,6 +22,8 @@ const theme = createTheme({
 let cancelAxios = null;
 function App() {
   console.log("rendering");
+
+  const [dateAndTime, setDateAndTime] = useState("");
   const [temp, setTemp] = useState({
     number: null,
     description: "",
@@ -26,6 +32,8 @@ function App() {
     icon: "",
   }); // for the all keys
   useEffect(() => {
+    moment.locale("ar"); // تعيين اللغة العربية لـ moment.js
+    setDateAndTime(moment().format('LLLL')); // تنسيق التاريخ والوقت باللغة العربية
     axios
       .get(
         "https://api.openweathermap.org/data/2.5/weather?lat=35.56200&lon=45.31700&appid=24f7438ece98c2de5a5ce455b4f63b43",
@@ -41,16 +49,25 @@ function App() {
         const max = Math.round(response.data.main.temp_max - 273.15);
         const description = response.data.weather[0].description;
         const icon = response.data.weather[0].icon;
-        setTemp({...temp, min: min, max: max, description: description, number: number, icon: icon});
-      })
+        setTemp((prevTemp) => ({
+          ...prevTemp,
+          min: min,
+          max: max,
+          description: description,
+          number: number,
+          icon: icon
+        }));})
       .catch((error) => {
         console.log(new Error(error));
       });
 
-    return () => {      // clean up
-      console.log("clean up")
-      cancelAxios();
-    }
+      return () => {      // clean up
+        console.log("clean up")
+        // التحقق من وجود قيمة معينة قبل استدعاء الدالة
+        if (cancelAxios) {
+          cancelAxios();
+        }
+      }
   }, []);
   return (
     <div className="App">
@@ -100,7 +117,7 @@ function App() {
                   </Typography>
 
                   <Typography variant="h5" style={{ marginRight: "20px" }}>
-                    الإثنين ١٠-١٠-٢٠٤٠
+                    {dateAndTime}
                   </Typography>
                 </div>
                 {/* == CITY & TIME == */}
