@@ -1,6 +1,7 @@
 import "./App.css";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useEffect, useState } from "react";
+import { useTranslation } from 'react-i18next';
 import axios from "axios";
 import moment from "moment";
 // حتى يتم تفعيل اللغة العربية عليك استيراد ملفات ال local 
@@ -21,8 +22,7 @@ const theme = createTheme({
 
 let cancelAxios = null;
 function App() {
-  console.log("rendering");
-
+  const { t, i18n } = useTranslation();
   const [dateAndTime, setDateAndTime] = useState("");
   const [temp, setTemp] = useState({
     number: null,
@@ -31,6 +31,12 @@ function App() {
     max: null,
     icon: "",
   }); // for the all keys
+
+  // language change
+  useEffect(() => {
+    i18n.changeLanguage("ar");
+  },[])
+  // moment and api
   useEffect(() => {
     moment.locale("ar"); // تعيين اللغة العربية لـ moment.js
     setDateAndTime(moment().format('LLLL')); // تنسيق التاريخ والوقت باللغة العربية
@@ -113,7 +119,7 @@ function App() {
                       fontWeight: "600",
                     }}
                   >
-                    السليمانية
+                    {t("Sulaymaniyah")}
                   </Typography>
 
                   <Typography variant="h5" style={{ marginRight: "20px" }}>
