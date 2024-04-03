@@ -37,7 +37,7 @@ function App() {
   function handleLanguageClick() {
     i18n.changeLanguage(i18n.language === "ar"? "en" : "ar");
     moment.locale(i18n.language === "ar"? "en" : "ar");
-    setDateAndTime(moment().format('MMMM Do YYYY, h:mm:ss a')); // تنسيق التاريخ والوقت باللغة العربية
+    setDateAndTime(moment().format('LLLL')); // تنسيق التاريخ والوقت باللغة العربية
   }
   // === event handlers ====
 
@@ -131,7 +131,7 @@ function App() {
                     {t("Sulaymaniyah")}
                   </Typography>
 
-                  <Typography variant="h5" style={{ marginRight: "20px" }}>
+                  <Typography variant="body1" style={{ marginRight: "20px" }}>
                     {dateAndTime}
                   </Typography>
                 </div>
@@ -158,7 +158,7 @@ function App() {
                     </div>
                     {/*== TEMP ==*/}
 
-                    <Typography variant="h6">{temp.description}</Typography>
+                    <Typography variant="h6">{t(temp.description)}</Typography>
 
                     {/* MIN & MAX */}
                     <div
@@ -169,7 +169,7 @@ function App() {
                       }}
                     >
                       <h5>{t("min")}: {temp.min}</h5>
-                      <h5 style={{ margin: "0px 5px" }}>|</h5>
+                      <h5 style={{ margin: "0px 20px" }}>|</h5>
                       <h5>{t("max")}: {temp.max}</h5>
                     </div>
                   </div>

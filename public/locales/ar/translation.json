@@ -1,5 +1,14 @@
 {
     "Sulaymaniyah": "السليمانية",
     "min": "الصغرى",
-    "max": "الكبرى"
+    "max": "الكبرى",
+    "clear sky": "سماء صافية",
+    "few clouds": "قليل من الغيوم",
+    "scattered clouds": "سحب متفرقة",
+    "broken clouds": "سحب متفككة",
+    "shower rain": "أمطار خفيفة",
+    "rain": "مطر",
+    "thunderstorm": "عواصف رعدية",
+    "snow": "ثلوج",
+    "mist": "ضباب"
 }
