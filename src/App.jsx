@@ -22,6 +22,7 @@ const theme = createTheme({
 
 let cancelAxios = null;
 function App() {
+  // states
   const { t, i18n } = useTranslation();
   const [dateAndTime, setDateAndTime] = useState("");
   const [temp, setTemp] = useState({
@@ -31,6 +32,14 @@ function App() {
     max: null,
     icon: "",
   }); // for the all keys
+
+  // event handlers
+  function handleLanguageClick() {
+    i18n.changeLanguage(i18n.language === "ar"? "en" : "ar");
+    moment.locale(i18n.language === "ar"? "en" : "ar");
+    setDateAndTime(moment().format('MMMM Do YYYY, h:mm:ss a')); // تنسيق التاريخ والوقت باللغة العربية
+  }
+  // === event handlers ====
 
   // language change
   useEffect(() => {
@@ -159,9 +168,9 @@ function App() {
                         alignItems: "center",
                       }}
                     >
-                      <h5>الصغرى: {temp.min}</h5>
+                      <h5>{t("min")}: {temp.min}</h5>
                       <h5 style={{ margin: "0px 5px" }}>|</h5>
-                      <h5>الكبرى: {temp.max}</h5>
+                      <h5>{t("max")}: {temp.max}</h5>
                     </div>
                   </div>
                   {/*== DEGREE & DESCRIPTION ==*/}
@@ -190,8 +199,9 @@ function App() {
                 marginTop: "20px",
               }}
             >
-              <Button style={{ color: "white" }} variant="text">
-                إنجليزي
+              <Button style={{ color: "white" }} variant="text"
+                      onClick={handleLanguageClick}>
+                {i18n.language === "en" ? "Arabic" : "انكليزي"}
               </Button>
             </div>
             {/*== TRANSLATION CONTAINER ==*/}
