@@ -4,6 +4,10 @@ import { useEffect, useState } from "react";
 import { useTranslation } from 'react-i18next';
 import axios from "axios";
 import moment from "moment";
+
+// redux import
+import { useDispatch, useSelector } from 'react-redux';
+
 // حتى يتم تفعيل اللغة العربية عليك استيراد ملفات ال local 
 import 'moment/min/locales.js';
 moment.locale("ar"); // تعيين اللغة العربية لـ moment.js
@@ -13,6 +17,7 @@ moment.locale("ar"); // تعيين اللغة العربية لـ moment.js
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
+import { setWeather } from "./weatherApiSlice";
 
 const theme = createTheme({
   typography: {
@@ -22,6 +27,10 @@ const theme = createTheme({
 
 let cancelAxios = null;
 function App() {
+  
+  const dispatch = useDispatch();
+  const result = useSelector( ( state ) => console.log(state.weather.result)  );
+
   // states
   const { t, i18n } = useTranslation();
   const [dateAndTime, setDateAndTime] = useState("");
@@ -45,7 +54,9 @@ function App() {
   // === event handlers ====
 
   // language change
-  useEffect(() => {
+  useEffect( () =>
+  {
+    dispatch(setWeather());
     i18n.changeLanguage("ar");
   },[])
   // moment and api
@@ -87,7 +98,7 @@ function App() {
         }
       }
   }, []);
-  return (
+  return (    
     <div className="App">
       <ThemeProvider theme={theme}>
         <Container maxWidth="sm">
